@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { updateHome, deleteHome } from '@/lib/db';
+import connectDB from '@/lib/db';
+import { updateHome, deleteHome } from '@/lib/mongoService';
 
 export async function PUT(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
+    await connectDB();
     const body = await req.json();
-    const updated = updateHome(params.id, body);
+    const updated = await updateHome(params.id, body);
     if (!updated) {
       return NextResponse.json({ error: 'Home not found' }, { status: 404 });
     }
@@ -25,7 +27,8 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const success = deleteHome(params.id);
+    await connectDB();
+    const success = await deleteHome(params.id);
     if (!success) {
       return NextResponse.json({ error: 'Home not found' }, { status: 404 });
     }
@@ -37,4 +40,3 @@ export async function DELETE(
     );
   }
 }
-

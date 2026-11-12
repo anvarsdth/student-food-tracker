@@ -12,6 +12,8 @@ data/
 
 # Environment variables
 .env
+.env*
+*.env
 .env.local
 .env.development.local
 .env.test.local

@@ -1,20 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAllMealAssignments, setMealAssignment, bulkUpdateAssignments } from '@/lib/db';
+import connectDB from '@/lib/db';
+import { getAllMealAssignments, setMealAssignment, bulkUpdateAssignments } from '@/lib/mongoService';
 import { MealType } from '@/types';
 
 export async function GET() {
-  const assignments = getAllMealAssignments();
-  return NextResponse.json({ assignments });
+  try {
+    await connectDB();
+    const assignments = await getAllMealAssignments();
+    return NextResponse.json({ assignments });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message || 'Failed to fetch assignments' }, { status: 500 });
+  }
 }
 
 export async function POST(req: NextRequest) {
   try {
+    await connectDB();
     const body = await req.json();
 
     // Check if bulk update
     if (body.bulk && Array.isArray(body.assignments)) {
-      bulkUpdateAssignments(body.assignments);
-      return NextResponse.json({ success: true, assignments: getAllMealAssignments() });
+      await bulkUpdateAssignments(body.assignments);
+      const updatedAssignments = await getAllMealAssignments();
+      return NextResponse.json({ success: true, assignments: updatedAssignments });
     }
 
     const { studentId, mealType, homeId } = body;
@@ -25,7 +33,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const assignment = setMealAssignment(studentId, mealType as MealType, homeId);
+    const assignment = await setMealAssignment(studentId, mealType as MealType, homeId);
     return NextResponse.json({ assignment });
   } catch (err: any) {
     return NextResponse.json(
@@ -34,4 +42,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-

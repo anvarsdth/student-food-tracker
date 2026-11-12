@@ -1,19 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAllStudentLeaves, createStudentLeave, cancelStudentLeave } from '@/lib/db';
+import connectDB from '@/lib/db';
+import { getAllStudentLeaves, createStudentLeave, cancelStudentLeave } from '@/lib/mongoService';
 import { LeaveMealType } from '@/types';
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const studentId = searchParams.get('studentId');
-  let leaves = getAllStudentLeaves();
-  if (studentId) {
-    leaves = leaves.filter((l) => l.studentId === studentId);
+  try {
+    await connectDB();
+    const { searchParams } = new URL(req.url);
+    const studentId = searchParams.get('studentId');
+    let leaves = await getAllStudentLeaves();
+    if (studentId) {
+      leaves = leaves.filter((l) => l.studentId === studentId);
+    }
+    return NextResponse.json({ leaves });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message || 'Failed to fetch leaves' }, { status: 500 });
   }
-  return NextResponse.json({ leaves });
 }
 
 export async function POST(req: NextRequest) {
   try {
+    await connectDB();
     const body = await req.json();
     const { studentId, startDate, endDate, mealType, reason } = body;
 
@@ -24,7 +31,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const newLeave = createStudentLeave({
+    const newLeave = await createStudentLeave({
       studentId,
       startDate,
       endDate,
@@ -43,6 +50,7 @@ export async function POST(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
+    await connectDB();
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
 
@@ -50,7 +58,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: 'Leave ID is required' }, { status: 400 });
     }
 
-    const success = cancelStudentLeave(id);
+    const success = await cancelStudentLeave(id);
     if (!success) {
       return NextResponse.json({ error: 'Leave not found' }, { status: 404 });
     }
@@ -63,4 +71,3 @@ export async function DELETE(req: NextRequest) {
     );
   }
 }
-

@@ -1,14 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAllBackupAssignments, createBackupAssignment, deleteBackupAssignment } from '@/lib/db';
+import connectDB from '@/lib/db';
+import { getAllBackupAssignments, createBackupAssignment, deleteBackupAssignment } from '@/lib/mongoService';
 import { MealType } from '@/types';
 
 export async function GET() {
-  const backups = getAllBackupAssignments();
-  return NextResponse.json({ backups });
+  try {
+    await connectDB();
+    const backups = await getAllBackupAssignments();
+    return NextResponse.json({ backups });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message || 'Failed to fetch backups' }, { status: 500 });
+  }
 }
 
 export async function POST(req: NextRequest) {
   try {
+    await connectDB();
     const body = await req.json();
     const { studentId, originalHomeId, backupHomeId, date, mealType, reason } = body;
 
@@ -19,7 +26,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const backup = createBackupAssignment({
+    const backup = await createBackupAssignment({
       studentId,
       originalHomeId,
       backupHomeId,
@@ -39,6 +46,7 @@ export async function POST(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
+    await connectDB();
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
 
@@ -46,17 +54,16 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: 'Backup ID is required' }, { status: 400 });
     }
 
-    const success = deleteBackupAssignment(id);
+    const success = await deleteBackupAssignment(id);
     if (!success) {
-      return NextResponse.json({ error: 'Backup assignment not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Backup not found' }, { status: 404 });
     }
 
     return NextResponse.json({ success: true });
   } catch (err: any) {
     return NextResponse.json(
-      { error: err.message || 'Failed to delete backup' },
+      { error: err.message || 'Failed to delete backup assignment' },
       { status: 500 }
     );
   }
 }
-

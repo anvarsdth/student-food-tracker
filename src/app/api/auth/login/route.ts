@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { findUserByCredentials, getStudentByUserId, getHomeByUserId } from '@/lib/db';
+import connectDB from '@/lib/db';
+import { findUserByCredentials, getStudentByUserId, getHomeByUserId } from '@/lib/mongoService';
 
 export async function POST(req: NextRequest) {
   try {
+    await connectDB();
     const body = await req.json();
     const { userId, password } = body;
 
@@ -13,7 +15,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const user = findUserByCredentials(userId, password);
+    const user = await findUserByCredentials(userId, password);
     if (!user) {
       return NextResponse.json(
         { error: 'Invalid User ID or Password' },
@@ -23,9 +25,9 @@ export async function POST(req: NextRequest) {
 
     let profile: any = null;
     if (user.role === 'student') {
-      profile = getStudentByUserId(user.userId);
+      profile = await getStudentByUserId(user.userId);
     } else if (user.role === 'host') {
-      profile = getHomeByUserId(user.userId);
+      profile = await getHomeByUserId(user.userId);
     }
 
     return NextResponse.json({
@@ -45,4 +47,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-

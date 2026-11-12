@@ -1,19 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAllHomeAbsences, createHomeAbsence, deleteHomeAbsence } from '@/lib/db';
+import connectDB from '@/lib/db';
+import { getAllHomeAbsences, createHomeAbsence, deleteHomeAbsence } from '@/lib/mongoService';
 import { LeaveMealType } from '@/types';
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const homeId = searchParams.get('homeId');
-  let absences = getAllHomeAbsences();
-  if (homeId) {
-    absences = absences.filter((a) => a.homeId === homeId);
+  try {
+    await connectDB();
+    const { searchParams } = new URL(req.url);
+    const homeId = searchParams.get('homeId');
+    let absences = await getAllHomeAbsences();
+    if (homeId) {
+      absences = absences.filter((a) => a.homeId === homeId);
+    }
+    return NextResponse.json({ absences });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message || 'Failed to fetch absences' }, { status: 500 });
   }
-  return NextResponse.json({ absences });
 }
 
 export async function POST(req: NextRequest) {
   try {
+    await connectDB();
     const body = await req.json();
     const { homeId, startDate, endDate, mealType, reason } = body;
 
@@ -24,7 +31,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const newAbsence = createHomeAbsence({
+    const newAbsence = await createHomeAbsence({
       homeId,
       startDate,
       endDate,
@@ -43,6 +50,7 @@ export async function POST(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
+    await connectDB();
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
 
@@ -50,7 +58,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: 'Absence ID is required' }, { status: 400 });
     }
 
-    const success = deleteHomeAbsence(id);
+    const success = await deleteHomeAbsence(id);
     if (!success) {
       return NextResponse.json({ error: 'Absence not found' }, { status: 404 });
     }
@@ -58,9 +66,8 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (err: any) {
     return NextResponse.json(
-      { error: err.message || 'Failed to cancel absence' },
+      { error: err.message || 'Failed to delete absence' },
       { status: 500 }
     );
   }
 }
-

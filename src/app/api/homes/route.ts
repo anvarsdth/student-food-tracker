@@ -1,13 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAllHomes, createHome } from '@/lib/db';
+import connectDB from '@/lib/db';
+import { getAllHomes, createHome } from '@/lib/mongoService';
 
 export async function GET() {
-  const homes = getAllHomes();
-  return NextResponse.json({ homes });
+  try {
+    await connectDB();
+    const homes = await getAllHomes();
+    return NextResponse.json({ homes });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message || 'Failed to fetch host homes' }, { status: 500 });
+  }
 }
 
 export async function POST(req: NextRequest) {
   try {
+    await connectDB();
     const body = await req.json();
     const {
       userId,
@@ -30,7 +37,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const newHome = createHome({
+    const newHome = await createHome({
       userId,
       hostName,
       phone,
@@ -52,4 +59,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-
