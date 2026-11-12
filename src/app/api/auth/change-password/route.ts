@@ -34,9 +34,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Incorrect current password' }, { status: 401 });
     }
 
-    // Update password
-    user.password = newPassword.trim();
-    await user.save();
+    // Update and persist new password directly in MongoDB
+    const updated = await User.findOneAndUpdate(
+      { userId: normalizedId },
+      { $set: { password: newPassword.trim() } },
+      { new: true }
+    );
+
+    if (!updated) {
+      return NextResponse.json({ error: 'Failed to update user password' }, { status: 500 });
+    }
 
     return NextResponse.json({
       success: true,
@@ -49,3 +56,4 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+

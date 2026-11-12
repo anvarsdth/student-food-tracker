@@ -388,20 +388,12 @@ export async function findUserByCredentials(userId: string, password?: string): 
   const normalizedId = (userId || '').trim().toUpperCase();
   const normalizedPass = (password || '').trim();
 
-  // Primary check: exact match
-  let user = await User.findOne({ userId: normalizedId, password: normalizedPass }).lean();
-
-  // If admin uses the official new password
-  if (!user && normalizedId === 'ADM01' && normalizedPass === 'anvar@9483') {
-    await User.updateOne({ userId: 'ADM01' }, { $set: { password: 'anvar@9483' } });
-    user = await User.findOne({ userId: 'ADM01' }).lean();
+  if (!normalizedId || !normalizedPass) {
+    return null;
   }
 
-  // Fallback for regular demo users
-  if (!user && normalizedPass === 'password123' && normalizedId !== 'ADM01') {
-    user = await User.findOne({ userId: normalizedId }).lean();
-  }
-
+  // Strict check against MongoDB User record
+  const user = await User.findOne({ userId: normalizedId, password: normalizedPass }).lean();
   return (user as unknown as UserType) || null;
 }
 

@@ -93,44 +93,40 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <span className="text-[11px] font-medium text-gray-500 px-1.5">Switch:</span>
                 <button
                   onClick={() => onSwitchUser('ADM01')}
-                  className={`px-2 py-1 rounded text-xs font-medium transition ${
-                    user.userId === 'ADM01'
+                  className={`px-2 py-1 rounded text-xs font-medium transition ${user.userId === 'ADM01'
                       ? 'bg-purple-600 text-white shadow-xs'
                       : 'text-gray-700 hover:bg-gray-200'
-                  }`}
+                    }`}
                   title="Switch to Admin"
                 >
                   ADM01
                 </button>
                 <button
                   onClick={() => onSwitchUser('STU101')}
-                  className={`px-2 py-1 rounded text-xs font-medium transition ${
-                    user.userId === 'STU101'
+                  className={`px-2 py-1 rounded text-xs font-medium transition ${user.userId === 'STU101'
                       ? 'bg-emerald-600 text-white shadow-xs'
                       : 'text-gray-700 hover:bg-gray-200'
-                  }`}
+                    }`}
                   title="Switch to Student STU101"
                 >
                   STU101
                 </button>
                 <button
                   onClick={() => onSwitchUser('HOM201')}
-                  className={`px-2 py-1 rounded text-xs font-medium transition ${
-                    user.userId === 'HOM201'
+                  className={`px-2 py-1 rounded text-xs font-medium transition ${user.userId === 'HOM201'
                       ? 'bg-amber-600 text-white shadow-xs'
                       : 'text-gray-700 hover:bg-gray-200'
-                  }`}
+                    }`}
                   title="Switch to Host Home HOM201"
                 >
                   HOM201
                 </button>
                 <button
                   onClick={() => onSwitchUser('HOM204')}
-                  className={`px-2 py-1 rounded text-xs font-medium transition ${
-                    user.userId === 'HOM204'
+                  className={`px-2 py-1 rounded text-xs font-medium transition ${user.userId === 'HOM204'
                       ? 'bg-rose-600 text-white shadow-xs'
                       : 'text-gray-700 hover:bg-gray-200'
-                  }`}
+                    }`}
                   title="Switch to Absent Host HOM204"
                 >
                   HOM204 (Absent)
@@ -202,25 +198,22 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="text-gray-400">Switch:</span>
               <button
                 onClick={() => onSwitchUser('ADM01')}
-                className={`px-1.5 py-0.5 rounded text-[11px] ${
-                  user.userId === 'ADM01' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700'
-                }`}
+                className={`px-1.5 py-0.5 rounded text-[11px] ${user.userId === 'ADM01' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700'
+                  }`}
               >
                 ADM
               </button>
               <button
                 onClick={() => onSwitchUser('STU101')}
-                className={`px-1.5 py-0.5 rounded text-[11px] ${
-                  user.userId === 'STU101' ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700'
-                }`}
+                className={`px-1.5 py-0.5 rounded text-[11px] ${user.userId === 'STU101' ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700'
+                  }`}
               >
                 STU
               </button>
               <button
                 onClick={() => onSwitchUser('HOM201')}
-                className={`px-1.5 py-0.5 rounded text-[11px] ${
-                  user.userId === 'HOM201' ? 'bg-amber-600 text-white' : 'bg-gray-100 text-gray-700'
-                }`}
+                className={`px-1.5 py-0.5 rounded text-[11px] ${user.userId === 'HOM201' ? 'bg-amber-600 text-white' : 'bg-gray-100 text-gray-700'
+                  }`}
               >
                 HOM
               </button>

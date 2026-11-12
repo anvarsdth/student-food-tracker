@@ -66,7 +66,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ selectedDate, onRefreshD
     hostelBlock: '',
     emergencyContact: '',
     notes: '',
-    password: 'password123',
+    password: '',
   });
 
   // Home CRUD Modal State
@@ -83,7 +83,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ selectedDate, onRefreshD
     dinnerCapacity: 4,
     googleMapsUrl: '',
     notes: '',
-    password: 'password123',
+    password: '',
   });
 
   // Quick Assignment Modal State
@@ -165,7 +165,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ selectedDate, onRefreshD
         hostelBlock: student.hostelBlock || '',
         emergencyContact: student.emergencyContact || '',
         notes: student.notes || '',
-        password: 'password123',
+        password: '',
       });
     } else {
       setEditingStudent(null);
@@ -178,7 +178,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ selectedDate, onRefreshD
         hostelBlock: 'Main Block',
         emergencyContact: '',
         notes: '',
-        password: 'password123',
+        password: '',
       });
     }
     setStudentModalOpen(true);
@@ -224,7 +224,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ selectedDate, onRefreshD
         dinnerCapacity: home.dinnerCapacity,
         googleMapsUrl: home.googleMapsUrl || '',
         notes: home.notes || '',
-        password: 'password123',
+        password: '',
       });
     } else {
       setEditingHome(null);
@@ -240,7 +240,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ selectedDate, onRefreshD
         dinnerCapacity: 4,
         googleMapsUrl: '',
         notes: '',
-        password: 'password123',
+        password: '',
       });
     }
     setHomeModalOpen(true);
