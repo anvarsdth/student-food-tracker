@@ -33,11 +33,12 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin, error }) => {
 
   const handleQuickLogin = async (demoId: string) => {
     setUserId(demoId);
-    setPassword('password123');
+    const pass = demoId === 'ADM01' ? 'anvar@9483' : 'password123';
+    setPassword(pass);
     setLoading(true);
     setLocalError(null);
     try {
-      await onLogin(demoId, 'password123');
+      await onLogin(demoId, pass);
     } finally {
       setLoading(false);
     }
@@ -105,7 +106,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin, error }) => {
                 />
               </div>
               <p className="text-[11px] text-gray-400 mt-1">
-                Default password for all demo accounts: <code className="bg-gray-100 px-1 py-0.5 rounded text-gray-700">password123</code>
+                Admin: <code className="bg-purple-50 text-purple-700 px-1 py-0.5 rounded font-mono font-semibold">anvar@9483</code> • Students & Homes: <code className="bg-gray-100 px-1 py-0.5 rounded text-gray-700 font-mono">password123</code>
               </p>
             </div>
 

@@ -1,13 +1,14 @@
 'use strict';
 import React from 'react';
 import { User, Role } from '@/types';
-import { Utensils, Shield, GraduationCap, Home as HomeIcon, LogOut, RefreshCw, Calendar } from 'lucide-react';
+import { Utensils, Shield, GraduationCap, Home as HomeIcon, LogOut, RefreshCw, Calendar, KeyRound } from 'lucide-react';
 
 interface NavbarProps {
   user: User | null;
   onLogout: () => void;
   onSwitchUser: (userId: string) => void;
   onResetData: () => void;
+  onOpenChangePassword?: () => void;
   selectedDate: string;
   onDateChange: (date: string) => void;
 }
@@ -17,6 +18,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onLogout,
   onSwitchUser,
   onResetData,
+  onOpenChangePassword,
   selectedDate,
   onDateChange,
 }) => {
@@ -148,6 +150,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </div>
                   <span className="text-xs text-gray-400 font-mono">ID: {user.userId}</span>
                 </div>
+
+                {onOpenChangePassword && (
+                  <button
+                    onClick={onOpenChangePassword}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs text-gray-700 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg border border-gray-200 hover:border-emerald-200 transition"
+                    title="Change Password"
+                  >
+                    <KeyRound className="w-3.5 h-3.5 text-emerald-600" />
+                    <span className="hidden sm:inline">Password</span>
+                  </button>
+                )}
 
                 <button
                   onClick={onResetData}

@@ -51,7 +51,7 @@ export const getInitialSeedData = () => {
     {
       id: 'usr-admin-1',
       userId: 'ADM01',
-      password: 'password123',
+      password: 'anvar@9483',
       role: 'admin',
       name: 'Coordinator Ahmad',
       phone: '+919876543210',
@@ -391,8 +391,14 @@ export async function findUserByCredentials(userId: string, password?: string): 
   // Primary check: exact match
   let user = await User.findOne({ userId: normalizedId, password: normalizedPass }).lean();
 
-  // Resilience check: if password matches standard default or case variance
-  if (!user && (normalizedPass === 'password123' || normalizedPass === 'admin123')) {
+  // If admin uses the official new password
+  if (!user && normalizedId === 'ADM01' && normalizedPass === 'anvar@9483') {
+    await User.updateOne({ userId: 'ADM01' }, { $set: { password: 'anvar@9483' } });
+    user = await User.findOne({ userId: 'ADM01' }).lean();
+  }
+
+  // Fallback for regular demo users
+  if (!user && normalizedPass === 'password123' && normalizedId !== 'ADM01') {
     user = await User.findOne({ userId: normalizedId }).lean();
   }
 

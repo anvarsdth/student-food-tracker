@@ -8,6 +8,7 @@ import { LoginView } from '@/components/LoginView';
 import { AdminPanel } from '@/components/AdminPanel';
 import { StudentPanel } from '@/components/StudentPanel';
 import { HostHomePanel } from '@/components/HostHomePanel';
+import { ChangePasswordModal } from '@/components/ChangePasswordModal';
 import { CheckCircle2, AlertCircle } from 'lucide-react';
 
 export default function Home() {
@@ -15,6 +16,7 @@ export default function Home() {
   const [selectedDate, setSelectedDate] = useState<string>(getTodayString());
   const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
 
   const showToast = (text: string, type: 'success' | 'error' = 'success') => {
     setToastMessage({ text, type });
@@ -23,18 +25,15 @@ export default function Home() {
     }, 3500);
   };
 
-  // Restore saved session or default to Admin ADM01 for instant experience
+  // Restore saved session if any exists; otherwise keep user at LoginView screen
   useEffect(() => {
     const saved = localStorage.getItem('dars_user');
     if (saved) {
       try {
         setCurrentUser(JSON.parse(saved));
       } catch {
-        // Fallback default
+        localStorage.removeItem('dars_user');
       }
-    } else {
-      // Default initial login as ADM01 for immediate showcase
-      handleLogin('ADM01', 'password123');
     }
     setInitialLoading(false);
   }, []);
@@ -70,7 +69,8 @@ export default function Home() {
   };
 
   const handleSwitchUser = async (targetUserId: string) => {
-    await handleLogin(targetUserId, 'password123');
+    const pass = targetUserId === 'ADM01' ? 'anvar@9483' : 'password123';
+    await handleLogin(targetUserId, pass);
   };
 
   const handleResetData = async () => {
@@ -103,6 +103,7 @@ export default function Home() {
         onLogout={handleLogout}
         onSwitchUser={handleSwitchUser}
         onResetData={handleResetData}
+        onOpenChangePassword={() => setIsChangePasswordOpen(true)}
         selectedDate={selectedDate}
         onDateChange={setSelectedDate}
       />
@@ -130,6 +131,16 @@ export default function Home() {
           </>
         )}
       </main>
+
+      {/* Change Password Modal */}
+      {currentUser && (
+        <ChangePasswordModal
+          userId={currentUser.userId}
+          isOpen={isChangePasswordOpen}
+          onClose={() => setIsChangePasswordOpen(false)}
+          onSuccess={() => showToast('Password successfully changed!')}
+        />
+      )}
 
       {/* Floating Feedback Toast */}
       {toastMessage && (
