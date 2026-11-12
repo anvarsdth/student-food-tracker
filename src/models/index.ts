@@ -207,3 +207,4 @@ export const MealAssignment: Model<IMealAssignment> = mongoose.models.MealAssign
 export const HomeAbsence: Model<IHomeAbsence> = mongoose.models.HomeAbsence || mongoose.model<IHomeAbsence>('HomeAbsence', HomeAbsenceSchema);
 export const StudentLeave: Model<IStudentLeave> = mongoose.models.StudentLeave || mongoose.model<IStudentLeave>('StudentLeave', StudentLeaveSchema);
 export const BackupAssignment: Model<IBackupAssignment> = mongoose.models.BackupAssignment || mongoose.model<IBackupAssignment>('BackupAssignment', BackupAssignmentSchema);
+

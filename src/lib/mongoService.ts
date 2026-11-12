@@ -876,3 +876,4 @@ export async function getStudentDailySchedule(studentId: string, date: string): 
     },
   };
 }
+
