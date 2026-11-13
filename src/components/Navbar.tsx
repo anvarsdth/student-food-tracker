@@ -158,14 +158,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </button>
                 )}
 
-                <button
-                  onClick={onResetData}
-                  className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg border border-gray-200 transition"
-                  title="Reset Database to Default Seed Data"
-                >
-                  <RefreshCw className="w-3.5 h-3.5" />
-                  Reset Seed
-                </button>
+                {/* Developer credit */}
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <span>Developed by Anvar Sadath</span>
+                  <a href="https://wa.me/9188164052" target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:underline">WhatsApp</a>
+                </div>
 
                 <button
                   onClick={onLogout}
