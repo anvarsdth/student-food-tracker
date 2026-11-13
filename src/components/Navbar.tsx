@@ -156,13 +156,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <KeyRound className="w-3.5 h-3.5 text-emerald-600" />
                     <span className="hidden sm:inline">Password</span>
                   </button>
+
                 )}
 
-                {/* Developer credit */}
-                <div className="flex items-center gap-2 text-xs text-gray-500">
-                  <span>Developed by Anvar Sadath</span>
-                  <a href="https://wa.me/9188164052" target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:underline">WhatsApp</a>
-                </div>
+
 
                 <button
                   onClick={onLogout}
