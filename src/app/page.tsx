@@ -161,13 +161,10 @@ export default function Home() {
             Student Meal & Host Home Tracker (Dars Management System) • Multi-Role Community Platform
           </p>
           <div className="flex items-center gap-4">
-            <button
-              onClick={handleResetData}
-              className="text-gray-500 hover:text-gray-800 underline transition"
-            >
-              Reset Seed Data
-            </button>
-            <span className="font-mono text-gray-400">Next.js + Tailwind CSS</span>
+            <div className="flex items-center gap-2 text-xs text-gray-500">
+              <span>Developed by Anvar Sadath</span>
+              <a href="https://wa.me/9188164052" target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:underline">WhatsApp</a>
+            </div>
           </div>
         </div>
       </footer>
