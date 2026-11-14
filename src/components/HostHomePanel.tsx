@@ -33,24 +33,6 @@ export const HostHomePanel: React.FC<HostHomePanelProps> = ({ user, selectedDate
   const [activeMealTab, setActiveMealTab] = useState<MealType>('lunch');
   const [loading, setLoading] = useState(true);
 
-  // Messaging state for host
-  const [hostMsg, setHostMsg] = useState('');
-  const sendHostMessage = async (type: 'message' | 'report') => {
-    if (!hostMsg.trim()) return alert('Message cannot be empty');
-    await fetch('/api/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        senderId: user.userId,
-        senderRole: 'host',
-        content: hostMsg,
-        type,
-      }),
-    });
-    setHostMsg('');
-    alert('Sent');
-  };
-
   // Absence Modal State
   const [absenceModalOpen, setAbsenceModalOpen] = useState(false);
   const [absenceForm, setAbsenceForm] = useState({
@@ -119,23 +101,6 @@ export const HostHomePanel: React.FC<HostHomePanelProps> = ({ user, selectedDate
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-amber-600/60 text-amber-100 border border-amber-500 mb-2">
               <HomeIcon className="w-3.5 h-3.5" />
               Host Family Home
-            </div>
-            {/* Messaging UI */}
-            <div className="mt-4">
-              <textarea
-                value={hostMsg}
-                onChange={(e) => setHostMsg(e.target.value)}
-                placeholder="Message admin..."
-                className="w-full p-2 border rounded"
-              />
-              <div className="flex gap-2 mt-2">
-                <button onClick={() => sendHostMessage('message')} className="px-3 py-1 bg-emerald-600 text-white rounded">
-                  Send Message
-                </button>
-                <button onClick={() => sendHostMessage('report')} className="px-3 py-1 bg-red-600 text-white rounded">
-                  Report Issue
-                </button>
-              </div>
             </div>
             <h2 className="text-2xl font-extrabold tracking-tight">
               Assalamu Alaikum, {homeProfile?.hostName || user.name}
