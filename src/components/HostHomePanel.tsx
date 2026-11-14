@@ -1,5 +1,24 @@
 'use strict';
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
+
+// Inside the HostHomePanel component (after existing hooks)
+  const [hostMsg, setHostMsg] = useState('');
+  const sendHostMessage = async (type: 'message' | 'report') => {
+    if (!hostMsg.trim()) return alert('Message cannot be empty');
+    await fetch('/api/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        senderId: user.userId,
+        senderRole: 'host',
+        content: hostMsg,
+        type,
+      }),
+    });
+    setHostMsg('');
+    alert('Sent');
+  };
+
 import { User, Home, HomeDailySummary, HomeAbsence, LeaveMealType, MealType } from '@/types';
 import { createWhatsAppUrl } from '@/lib/whatsapp';
 import {

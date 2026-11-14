@@ -26,7 +26,56 @@ interface StudentPanelProps {
   selectedDate: string;
 }
 
-export const StudentPanel: React.FC<StudentPanelProps> = ({ user, selectedDate }) => {
+import { useState } from 'react';
+
+export const StudentPanel = ({ user, selectedDate }: { user: any; selectedDate: string }) => {
+  const [msg, setMsg] = useState('');
+  const sendMessage = async (type: 'message' | 'report') => {
+    if (!msg.trim()) return alert('Message cannot be empty');
+    await fetch('/api/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        senderId: user.userId,
+        senderRole: 'student',
+        content: msg,
+        type,
+      }),
+    });
+    setMsg('');
+    alert('Sent');
+  };
+
+  return (
+    <div className="p-4">
+      {/* existing panel content */}
+      <h2 className="text-lg font-bold">Student Dashboard</h2>
+      {/* ...other UI... */}
+
+      {/* Messaging Section */}
+      <textarea
+        value={msg}
+        onChange={(e) => setMsg(e.target.value)}
+        placeholder="Message admin..."
+        className="w-full p-2 border rounded mt-4"
+      />
+      <div className="flex gap-2 mt-2">
+        <button
+          onClick={() => sendMessage('message')}
+          className="px-3 py-1 bg-emerald-600 text-white rounded"
+        >
+          Send Message
+        </button>
+        <button
+          onClick={() => sendMessage('report')}
+          className="px-3 py-1 bg-red-600 text-white rounded"
+        >
+          Report Issue
+        </button>
+      </div>
+    </div>
+  );
+};: React.FC<StudentPanelProps> = ({ user, selectedDate }) => {
   const [schedule, setSchedule] = useState<StudentDailySchedule | null>(null);
   const [studentProfile, setStudentProfile] = useState<Student | null>(null);
   const [myLeaves, setMyLeaves] = useState<StudentLeave[]>([]);
@@ -125,15 +174,14 @@ export const StudentPanel: React.FC<StudentPanelProps> = ({ user, selectedDate }
 
     return (
       <div
-        className={`rounded-2xl border p-5 transition flex flex-col justify-between ${
-          isOnLeave
+        className={`rounded-2xl border p-5 transition flex flex-col justify-between ${isOnLeave
             ? 'bg-gray-50/80 border-gray-200 opacity-70'
             : isReassigned
-            ? 'bg-purple-50/50 border-purple-300 shadow-sm'
-            : isHostAbsent
-            ? 'bg-rose-50/60 border-rose-300 shadow-sm'
-            : 'bg-white border-gray-200 hover:border-emerald-300 hover:shadow-md'
-        }`}
+              ? 'bg-purple-50/50 border-purple-300 shadow-sm'
+              : isHostAbsent
+                ? 'bg-rose-50/60 border-rose-300 shadow-sm'
+                : 'bg-white border-gray-200 hover:border-emerald-300 hover:shadow-md'
+          }`}
       >
         <div>
           {/* Card Header */}
@@ -330,8 +378,8 @@ export const StudentPanel: React.FC<StudentPanelProps> = ({ user, selectedDate }
                 <p className="text-xs text-amber-800 mt-1">
                   One or more of your assigned host homes are unavailable today.
                   {schedule.meals.breakfast.backupHome ||
-                  schedule.meals.lunch.backupHome ||
-                  schedule.meals.dinner.backupHome
+                    schedule.meals.lunch.backupHome ||
+                    schedule.meals.dinner.backupHome
                     ? ' Admin has assigned temporary backup homes below.'
                     : ' Please check with coordinator if a meal has not yet been reassigned.'}
                 </p>
@@ -393,13 +441,12 @@ export const StudentPanel: React.FC<StudentPanelProps> = ({ user, selectedDate }
               return (
                 <div
                   key={leave.id}
-                  className={`p-3.5 rounded-xl border flex items-center justify-between gap-3 ${
-                    isCurrent
+                  className={`p-3.5 rounded-xl border flex items-center justify-between gap-3 ${isCurrent
                       ? 'border-emerald-300 bg-emerald-50/40'
                       : leave.status === 'cancelled'
-                      ? 'border-gray-200 bg-gray-50 opacity-60'
-                      : 'border-gray-200 bg-white'
-                  }`}
+                        ? 'border-gray-200 bg-gray-50 opacity-60'
+                        : 'border-gray-200 bg-white'
+                    }`}
                 >
                   <div>
                     <div className="flex items-center gap-2">
